@@ -1,10 +1,14 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
+	"github.com/emadghaffari/res_errors/errors"
 	"github.com/emadghaffari/rest_items-api/services"
+	"github.com/emadghaffari/rest_items-api/utils/httputils"
 
 	"github.com/emadghaffari/go-oauth"
 	"github.com/emadghaffari/rest_items-api/domain/items"
@@ -30,16 +34,34 @@ type itemsController struct{}
 func (c *itemsController) Create(w http.ResponseWriter, r *http.Request) {
 	if err := oauth.AuthenticateRequest(r); err != nil {
 		// TODO: return error
-	}
-	item := &items.Item{
-		Seller: oauth.GetCallerID(r),
+		httputils.ResponseError(w, err)
+		return
 	}
 
-	result, err := services.ItemService.Create(item)
+	responseBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
+		resErr := errors.HandlerBadRequest("invalid Body request")
+		httputils.ResponseError(w, resErr)
+		return
+	}
+	defer r.Body.Close()
+
+	var item items.Item
+	if err := json.Unmarshal(responseBody, &item); err != nil {
+		resErr := errors.HandlerBadRequest("error in Unmarshal requestBody")
+		httputils.ResponseError(w, resErr)
+		return
+	}
+	item.Seller = oauth.GetCallerID(r)
+
+	result, createdErr := services.ItemService.Create(&item)
+	if createdErr != nil {
 		// TODO; return error
+		httputils.ResponseError(w, createdErr)
+		return
 	}
 	fmt.Println(result)
+	httputils.ResponseJSON(w, http.StatusCreated, result)
 }
 
 // Get func

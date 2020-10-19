@@ -20,5 +20,5 @@ type pingController struct{}
 // get a item with ID
 func (c *pingController) Get(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Pong"))
+	w.Write([]byte("Pong!\n"))
 }

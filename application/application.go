@@ -1,9 +1,11 @@
 package application
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/emadghaffari/rest_items-api/clients/elasticsearch"
 	"github.com/gorilla/mux"
 )
 
@@ -13,14 +15,17 @@ var (
 
 // StartApplication func
 func StartApplication() {
+	fmt.Println("servcer started")
+	elasticsearch.Init()
 	mapURLs()
 
 	srv := &http.Server{
 		Handler: router,
-		Addr:    "127.0.0.1:8000",
+		Addr:    ":8000",
 		// Good practice: enforce timeouts for servers you create!
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 1 * time.Second,
+		ReadTimeout:  5 * time.Second,
+		IdleTimeout:  50 * time.Second,
 	}
 
 	if err := srv.ListenAndServe(); err != nil {
