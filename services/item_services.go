@@ -17,8 +17,12 @@ type itemsServiceInterface interface {
 
 type itemService struct{}
 
-func (s *itemService) Get(string) (*items.Item, errors.ResError) {
-	return nil, errors.HandlerBadRequest("implement me")
+func (s *itemService) Get(id string) (*items.Item, errors.ResError) {
+	item := items.Item{ID: id}
+	if err := item.Get(); err != nil {
+		return nil, err
+	}
+	return &item, nil
 }
 
 func (s *itemService) Create(item items.Item) (*items.Item, errors.ResError) {

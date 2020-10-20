@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/emadghaffari/go-oauth"
 	"github.com/emadghaffari/res_errors/errors"
 	"github.com/emadghaffari/rest_items-api/services"
 	"github.com/emadghaffari/rest_items-api/utils/httputils"
+	"github.com/gorilla/mux"
 
 	"github.com/emadghaffari/rest_items-api/domain/items"
 )
@@ -73,5 +75,13 @@ func (c *itemsController) Create(w http.ResponseWriter, r *http.Request) {
 // Get func
 // get a item with ID
 func (c *itemsController) Get(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := strings.TrimSpace(vars["id"])
 
+	item, err := services.ItemService.Get(id)
+	if err != nil {
+		httputils.ResponseError(w, err)
+		return
+	}
+	httputils.ResponseJSON(w, http.StatusOK, item)
 }

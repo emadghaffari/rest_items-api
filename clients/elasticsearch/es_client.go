@@ -2,6 +2,7 @@ package elasticsearch
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/emadghaffari/res_errors/errors"
@@ -17,6 +18,7 @@ var (
 
 type esClientInterface interface {
 	Index(string, string, interface{}) (*elastic.IndexResponse, errors.ResError)
+	Get(string, string, string) (*elastic.GetResult, errors.ResError)
 	SetClient(*elastic.Client)
 }
 
@@ -52,6 +54,20 @@ func (c *esClient) Index(index string, docType string, doc interface{}) (*elasti
 		return nil, errors.HandlerInternalServerError("internal ELK error in Index", err)
 	}
 	return elk, nil
+}
+
+func (c *esClient) Get(index string, docType string, id string) (*elastic.GetResult, errors.ResError) {
+	ctx := context.Background()
+	result, err := c.client.Get().
+		Index(index).
+		Type(docType).
+		Id(id).
+		Do(ctx)
+	if err != nil {
+		logger.Error(fmt.Sprintf("error in index esClient %s", id), err)
+		return nil, errors.HandlerInternalServerError("internal ELK error in Index", err)
+	}
+	return result, nil
 }
 
 func (c *esClient) SetClient(client *elastic.Client) {
