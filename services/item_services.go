@@ -11,16 +11,21 @@ var (
 )
 
 type itemsServiceInterface interface {
-	Get(string) (*items.Item, *errors.ResError)
-	Create(*items.Item) (*items.Item, *errors.ResError)
+	Get(string) (*items.Item, errors.ResError)
+	Create(items.Item) (*items.Item, errors.ResError)
 }
 
 type itemService struct{}
 
-func (s *itemService) Get(string) (*items.Item, *errors.ResError) {
+func (s *itemService) Get(string) (*items.Item, errors.ResError) {
 	return nil, errors.HandlerBadRequest("implement me")
 }
 
-func (s *itemService) Create(*items.Item) (*items.Item, *errors.ResError) {
-	return nil, errors.HandlerBadRequest("implement me")
+func (s *itemService) Create(item items.Item) (*items.Item, errors.ResError) {
+	if err := item.Save(); err != nil {
+		return nil, err
+	}
+
+	return &item, nil
+
 }

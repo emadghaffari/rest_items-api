@@ -2,7 +2,7 @@ package items
 
 // Item struct
 type Item struct {
-	ID                int64       `json:"id"`
+	ID                string      `json:"id"`
 	Seller            int64       `json:"seller"`
 	Title             string      `json:"title"`
 	Description       Description `json:"description"`
@@ -22,6 +22,6 @@ type Description struct {
 
 // Picture struct
 type Picture struct {
-	ID  int64 `json:"id"`
-	URL int64 `json:"url"`
+	ID  string `json:"id"`
+	URL string `json:"url"`
 }

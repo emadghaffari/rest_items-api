@@ -3,19 +3,22 @@
 
 [[projects]]
   branch = "main"
-  digest = "1:df508b00b2e5f072ffc611f6fb73578414807f7a40df079c09c6411bb7cb6f24"
+  digest = "1:b436cb43dd831bd81fbc36981ecf57007dd6265a321e09529b24d47a7d2fb908"
   name = "github.com/emadghaffari/go-oauth"
   packages = ["."]
   pruneopts = "UT"
-  revision = "2c2ee0edad1c160262bfa3ef1ed74b1dade0a4a4"
+  revision = "a5095151e62f40d45fac2eb39cc022da9d93f4b8"
 
 [[projects]]
   branch = "main"
-  digest = "1:3223c6713617529483ca780b241ccac22c76b78b945a5a45dd487a41ac748a7d"
+  digest = "1:0679f57e2657cbc751063804ed5ad70b421671ee298f322847bd2d2685935de6"
   name = "github.com/emadghaffari/res_errors"
-  packages = ["errors"]
+  packages = [
+    "errors",
+    "logger",
+  ]
   pruneopts = "UT"
-  revision = "5836ee3f19ac9db76fb9d698f054c1ace4e14026"
+  revision = "26639b48eada1ba12887a3f928acdfe0575578c1"
 
 [[projects]]
   digest = "1:6078383dbb7405bfa3ce16957f37564e3b716afa29b6eb45ffdb6674624d1e0d"
@@ -111,6 +114,7 @@
   input-imports = [
     "github.com/emadghaffari/go-oauth",
     "github.com/emadghaffari/res_errors/errors",
+    "github.com/emadghaffari/res_errors/logger",
     "github.com/gorilla/mux",
     "github.com/olivere/elastic",
     "go.uber.org/zap",
