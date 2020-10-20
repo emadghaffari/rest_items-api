@@ -34,12 +34,9 @@ type itemsController struct{}
 func (c *itemsController) Create(w http.ResponseWriter, r *http.Request) {
 	if err := oauth.AuthenticateRequest(r); err != nil {
 		// TODO: return error
-		fmt.Println("err")
 		httputils.ResponseError(w, err)
 		return
 	}
-	fmt.Println(r.Header.Get("X-Caller-Id"))
-	fmt.Println(r.Header.Get("X-Client-Id"))
 	saller := oauth.GetCallerID(r)
 	if saller == 0 {
 		resErr := errors.HandlerBadRequest("invalid caller ID")

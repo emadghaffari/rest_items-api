@@ -25,6 +25,22 @@
 #   unused-packages = true
 
 
+[[constraint]]
+  branch = "main"
+  name = "github.com/emadghaffari/go-oauth"
+
+[[constraint]]
+  branch = "main"
+  name = "github.com/emadghaffari/res_errors"
+
+[[constraint]]
+  name = "github.com/gorilla/mux"
+  version = "1.8.0"
+
+[[constraint]]
+  name = "github.com/olivere/elastic"
+  version = "6.2.35"
+
 [prune]
   go-tests = true
   unused-packages = true

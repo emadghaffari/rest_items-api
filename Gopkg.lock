@@ -3,22 +3,22 @@
 
 [[projects]]
   branch = "main"
-  digest = "1:b436cb43dd831bd81fbc36981ecf57007dd6265a321e09529b24d47a7d2fb908"
+  digest = "1:f0acd3859fea9c54c3ac6445c3784f7043727e5d0ee1c463819385be178b74e6"
   name = "github.com/emadghaffari/go-oauth"
   packages = ["."]
   pruneopts = "UT"
-  revision = "a5095151e62f40d45fac2eb39cc022da9d93f4b8"
+  revision = "e0dc69f43a2c720a0577ccda29d6a57d25484119"
 
 [[projects]]
   branch = "main"
-  digest = "1:0679f57e2657cbc751063804ed5ad70b421671ee298f322847bd2d2685935de6"
+  digest = "1:9b7032b6c2170674a64e4e7329b66a0fc9a01e1bb4e53d94bed7fe07d8238776"
   name = "github.com/emadghaffari/res_errors"
   packages = [
     "errors",
     "logger",
   ]
   pruneopts = "UT"
-  revision = "26639b48eada1ba12887a3f928acdfe0575578c1"
+  revision = "1b9d3f287aa059b4f96c5bb3f8f99b061ecf1afe"
 
 [[projects]]
   digest = "1:6078383dbb7405bfa3ce16957f37564e3b716afa29b6eb45ffdb6674624d1e0d"
@@ -117,8 +117,6 @@
     "github.com/emadghaffari/res_errors/logger",
     "github.com/gorilla/mux",
     "github.com/olivere/elastic",
-    "go.uber.org/zap",
-    "go.uber.org/zap/zapcore",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

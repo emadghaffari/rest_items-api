@@ -7,12 +7,13 @@ import (
 
 const (
 	indexES = "items"
+	docType = "_doc"
 )
 
 // Save method
 // store new item
 func (i *Item) Save() errors.ResError {
-	result, err := elasticsearch.Client.Index(indexES, i)
+	result, err := elasticsearch.Client.Index(indexES, docType, i)
 	if err != nil {
 		return err
 	}

@@ -16,7 +16,7 @@ var (
 )
 
 type esClientInterface interface {
-	Index(string, interface{}) (*elastic.IndexResponse, errors.ResError)
+	Index(string, string, interface{}) (*elastic.IndexResponse, errors.ResError)
 	SetClient(*elastic.Client)
 }
 
@@ -40,12 +40,12 @@ func Init() {
 	Client.SetClient(client)
 }
 
-func (c *esClient) Index(index string, doc interface{}) (*elastic.IndexResponse, errors.ResError) {
+func (c *esClient) Index(index string, docType string, doc interface{}) (*elastic.IndexResponse, errors.ResError) {
 	ctx := context.Background()
 	elk, err := c.client.Index().
 		Index(index).
 		BodyJson(doc).
-		Type(index).
+		Type(docType).
 		Do(ctx)
 	if err != nil {
 		logger.Error("error in index esClient", err)
