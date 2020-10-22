@@ -21,6 +21,7 @@ type esClientInterface interface {
 	Get(string, string, string) (*elastic.GetResult, errors.ResError)
 	SetClient(*elastic.Client)
 	Search(string, elastic.Query) (*elastic.SearchResult, errors.ResError)
+	Delete(string, string, string) (*elastic.DeleteResponse,errors.ResError)
 }
 
 type esClient struct {
@@ -80,6 +81,20 @@ func (c *esClient) Search(index string, query elastic.Query) (*elastic.SearchRes
 	result,err := c.client.Search(index).Query(query).RestTotalHitsAsInt(true).Do(ctx)
 	if err != nil {
 		logger.Error(fmt.Sprintf("error in search esClient %s", index), err)
+		return nil, errors.HandlerInternalServerError("internal ELK error in Index", err)
+	}
+	return result, nil
+}
+
+func (c *esClient) Delete(index string, docType string, id string) (*elastic.DeleteResponse,errors.ResError) {
+	ctx := context.Background()
+	result, err := c.client.Delete().
+		Index(index).
+		Type(docType).
+		Id(id).
+		Do(ctx)
+	if err != nil {
+		logger.Error(fmt.Sprintf("error in index esClient %s", id), err)
 		return nil, errors.HandlerInternalServerError("internal ELK error in Index", err)
 	}
 	return result, nil

@@ -73,3 +73,21 @@ func (i *Item) Search(query queries.EsQuery) ([]Item,errors.ResError) {
 	}
 	return items, nil
 }
+
+
+// Delete func
+// get item with id
+func (i *Item) Delete() errors.ResError {
+	result, err := elasticsearch.Client.Delete(indexES, docType, i.ID)
+	if err != nil {
+		if strings.Contains(err.Error(), "404") {
+			return errors.HandlerNotFoundError(fmt.Sprintf("item not found %s", i.ID))
+		}
+		return err
+	}
+	if result.Shards.Successful > 0 {
+		return errors.HandlerNotFoundError(fmt.Sprintf("item not found %s", i.ID))
+	}
+
+	return nil
+}
