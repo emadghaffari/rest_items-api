@@ -7,6 +7,7 @@ import (
 
 	"github.com/emadghaffari/res_errors/errors"
 	"github.com/emadghaffari/rest_items-api/clients/elasticsearch"
+	"github.com/emadghaffari/rest_items-api/domain/queries"
 )
 
 const (
@@ -49,4 +50,26 @@ func (i *Item) Get() errors.ResError {
 	}
 	i.ID = itemID
 	return nil
+}
+
+// Search meth
+func (i *Item) Search(query queries.EsQuery) ([]Item,errors.ResError) {
+	result,err := elasticsearch.Client.Search(indexES,query.Build())
+	if err != nil{
+		return nil,errors.HandlerInternalServerError(fmt.Sprintf("error in Search from DB %s", i.ID), err)
+	}
+	items := make([]Item,result.TotalHits())
+	for index, hit := range result.Hits.Hits {
+		bytes,_ := hit.Source.MarshalJSON();
+		var item Item
+		if  err := json.Unmarshal(bytes, &item);err != nil {
+			return nil,errors.HandlerInternalServerError(fmt.Sprintf("error in unmarshal data from elk database"), err)
+		}
+		items[index] = item
+	}
+	if len(items) == 0 {
+		return nil,errors.HandlerInternalServerError(fmt.Sprintf("no items found by filter "), nil)
+
+	}
+	return items, nil
 }

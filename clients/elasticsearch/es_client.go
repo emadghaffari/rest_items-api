@@ -20,6 +20,7 @@ type esClientInterface interface {
 	Index(string, string, interface{}) (*elastic.IndexResponse, errors.ResError)
 	Get(string, string, string) (*elastic.GetResult, errors.ResError)
 	SetClient(*elastic.Client)
+	Search(string, elastic.Query) (*elastic.SearchResult, errors.ResError)
 }
 
 type esClient struct {
@@ -40,6 +41,10 @@ func Init() {
 		panic(err)
 	}
 	Client.SetClient(client)
+}
+
+func (c *esClient) SetClient(client *elastic.Client) {
+	c.client = client
 }
 
 func (c *esClient) Index(index string, docType string, doc interface{}) (*elastic.IndexResponse, errors.ResError) {
@@ -70,6 +75,12 @@ func (c *esClient) Get(index string, docType string, id string) (*elastic.GetRes
 	return result, nil
 }
 
-func (c *esClient) SetClient(client *elastic.Client) {
-	c.client = client
+func (c *esClient) Search(index string, query elastic.Query) (*elastic.SearchResult, errors.ResError) {
+	ctx := context.Background()
+	result,err := c.client.Search(index).Query(query).RestTotalHitsAsInt(true).Do(ctx)
+	if err != nil {
+		logger.Error(fmt.Sprintf("error in search esClient %s", index), err)
+		return nil, errors.HandlerInternalServerError("internal ELK error in Index", err)
+	}
+	return result, nil
 }

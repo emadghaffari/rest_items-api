@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/emadghaffari/rest_items-api/domain/items"
+	"github.com/emadghaffari/rest_items-api/domain/queries"
 )
 
 var (
@@ -25,6 +26,7 @@ var (
 type itemsControllerInterface interface {
 	Create(w http.ResponseWriter, r *http.Request)
 	Get(w http.ResponseWriter, r *http.Request)
+	Search(w http.ResponseWriter, r *http.Request)
 }
 
 // ItemsController struct
@@ -84,4 +86,29 @@ func (c *itemsController) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	httputils.ResponseJSON(w, http.StatusOK, item)
+}
+
+func (c *itemsController) Search(w http.ResponseWriter, r *http.Request)  {
+	responseBody,err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		resErr := errors.HandlerBadRequest("invalid Body request")
+		httputils.ResponseError(w, resErr)
+		return
+	}
+	defer r.Body.Close()
+	var query queries.EsQuery
+	if err := json.Unmarshal(responseBody, &query); err != nil {
+		resErr := errors.HandlerBadRequest(fmt.Sprintf("error in Unmarshal requestBody %v", err))
+		httputils.ResponseError(w, resErr)
+		return
+	}
+
+	result,err := services.ItemService.Search(query)
+	if err != nil {
+		resErr := errors.HandlerBadRequest("invalid Body result")
+		httputils.ResponseError(w, resErr)
+		fmt.Println(resErr)
+		return
+	}
+	httputils.ResponseJSON(w,http.StatusOK,result)
 }

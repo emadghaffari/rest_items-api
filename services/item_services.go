@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/emadghaffari/res_errors/errors"
 	"github.com/emadghaffari/rest_items-api/domain/items"
+	"github.com/emadghaffari/rest_items-api/domain/queries"
 )
 
 var (
@@ -13,6 +14,7 @@ var (
 type itemsServiceInterface interface {
 	Get(string) (*items.Item, errors.ResError)
 	Create(items.Item) (*items.Item, errors.ResError)
+	Search(queries.EsQuery) ([]items.Item, errors.ResError)
 }
 
 type itemService struct{}
@@ -31,5 +33,15 @@ func (s *itemService) Create(item items.Item) (*items.Item, errors.ResError) {
 	}
 
 	return &item, nil
+
+}
+func (s *itemService) Search(item queries.EsQuery) ([]items.Item, errors.ResError) {
+	dao := items.Item{}
+	result, err := dao.Search(item)
+	if  err != nil {
+		return nil, err
+	}
+
+	return result, nil
 
 }
